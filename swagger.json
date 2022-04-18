@@ -1,0 +1,396 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"version": "1.0.1",
+		"title": "Nuvem Shop / Tienda Nube Superheros/ API docs",
+		"description": "API documentation for the Superheros project / [Backend github repository](https://github.com/kvlad0610/superhero)",
+		"license": {
+			"name": "MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		}
+	},
+	"consumes": ["application/json", "multipart/form-data"],
+	"produces": ["application/json", "multipart/form-data"],
+	"servers": [
+		{"url": "http://localhost:3000"},
+		{"url": "https://mongodb-contact.herokuapp.com"}
+	],
+	"tags": [
+		{
+			"name": "Superhero",
+			"description": "End-points for superhero collection."
+		}
+	],
+
+	"paths": {
+		"/api/superheros": {
+			"get": {
+				"tags": ["Superhero"],
+				"summary": "Getting all superheros",
+				"parameters": [],
+
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuperheroResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					}
+				}
+			},
+
+			"post": {
+				"tags": ["Superhero"],
+				"summary": "Created superhero",
+				"parameters": [],
+
+				"requestBody": {
+					"description": "Created superhero object",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SuperheroRequest"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuperheroResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/api/superheros/{superheroId}": {
+			"get": {
+				"tags": ["Superhero"],
+				"summary": "Getting superheros by id",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "superheroId",
+						"required": true,
+						"type": "string",
+						"description": "Superhero's id"
+					}
+				],
+
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuperheroResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Non Found",
+						"content": {}
+					}
+				}
+			},
+
+			"delete": {
+				"tags": ["Superhero"],
+				"summary": "Remove superhero",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "superheroId",
+						"required": true,
+						"type": "string",
+						"description": "Superhero's id"
+					}
+				],
+
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"example": {"message": "Superhero deleted"}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Non Found",
+						"content": {}
+					}
+				}
+			},
+
+			"put": {
+				"tags": ["Superhero"],
+				"summary": "Superhero change",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "superheroId",
+						"required": true,
+						"type": "string",
+						"description": "Superhero's id"
+					}
+				],
+
+				"requestBody": {
+					"description": "Change superhero object",
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SuperheroChangeRequest"
+							}
+						}
+					}
+				},
+
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuperheroResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)",
+						"content": {}
+					},
+					"404": {
+						"description": "Non Found",
+						"content": {}
+					}
+				}
+			}
+		},
+
+		"/api/superheros/{superheroId}/image": {
+			"patch": {
+				"tags": ["Superhero"],
+				"summary": "Superhero image change",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "superheroId",
+						"required": true,
+						"type": "string",
+						"description": "Superhero's id"
+					}
+				],
+				"requestBody": {
+					"description": "Superhero image",
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/SuperheroImageRequest"
+							},
+							"encoding": {
+								"image": {
+									"contentType": "image/png"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuperheroImageResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Non Found",
+						"content": {}
+					}
+				}
+			}
+		}
+	},
+
+	"components": {
+		"schemas": {
+			"SuperheroRequest": {
+				"type": "object",
+				"required": [
+					"nickname",
+					"real_name",
+					"origin_description",
+					"superpowers",
+					"catch_phrase"
+				],
+				"properties": {
+					"nickname": {
+						"type": "string",
+						"description": "The nickname of the superhero",
+						"example": "Superman"
+					},
+					"real_name": {
+						"type": "string",
+						"description": "The real name of the superhero",
+						"example": "Clark Kent"
+					},
+					"origin_description": {
+						"type": "string",
+						"description": "Description of the superhero",
+						"example": "he was born Kal-El on the planet Krypton, before being rocketed to Earth as an infant by his scientist father Jor-El, moments before Krypton's destruction…"
+					},
+					"superpowers": {
+						"type": "string",
+						"description": "Superhero superpower description",
+						"example": "solar energy absorption and healing factor, solar flare and heat vision, solar invulnerability, flight…"
+					},
+					"catch_phrase": {
+						"type": "string",
+						"description": "catchphrase about superhero",
+						"example": "Look, up in the sky, it's a bird, it's a plane, it's Superman!"
+					}
+				}
+			},
+
+			"SuperheroResponse": {
+				"type": "object",
+				"required": [
+					"nickname",
+					"real_name",
+					"origin_description",
+					"superpowers",
+					"catch_phrase",
+					"images"
+				],
+				"properties": {
+					"nickname": {
+						"type": "string",
+						"description": "The nickname of the superhero",
+						"example": "Superman"
+					},
+					"real_name": {
+						"type": "string",
+						"description": "The real name of the superhero",
+						"example": "Clark Kent"
+					},
+					"origin_description": {
+						"type": "string",
+						"description": "Description of the superhero",
+						"example": "he was born Kal-El on the planet Krypton, before being rocketed to Earth as an infant by his scientist father Jor-El, moments before Krypton's destruction…"
+					},
+					"superpowers": {
+						"type": "string",
+						"description": "Superhero superpower description",
+						"example": "solar energy absorption and healing factor, solar flare and heat vision, solar invulnerability, flight…"
+					},
+					"catch_phrase": {
+						"type": "string",
+						"description": "catchphrase about superhero",
+						"example": "Look, up in the sky, it's a bird, it's a plane, it's Superman!"
+					},
+					"images": {
+						"type": "string",
+						"description": "Photo superhero",
+						"example": "a set of images of the superhero"
+					}
+				}
+			},
+
+			"SuperheroChangeRequest": {
+				"type": "object",
+				"properties": {
+					"nickname": {
+						"type": "string",
+						"description": "The nickname of the superhero",
+						"example": "Superman"
+					},
+					"real_name": {
+						"type": "string",
+						"description": "The real name of the superhero",
+						"example": "Clark Kent"
+					},
+					"origin_description": {
+						"type": "string",
+						"description": "Description of the superhero",
+						"example": "he was born Kal-El on the planet Krypton, before being rocketed to Earth as an infant by his scientist father Jor-El, moments before Krypton's destruction…"
+					},
+					"superpowers": {
+						"type": "string",
+						"description": "Superhero superpower description",
+						"example": "solar energy absorption and healing factor, solar flare and heat vision, solar invulnerability, flight…"
+					},
+					"catch_phrase": {
+						"type": "string",
+						"description": "catchphrase about superhero",
+						"example": "Look, up in the sky, it's a bird, it's a plane, it's Superman!"
+					}
+				}
+			},
+
+			"SuperheroImageRequest": {
+				"type": "object",
+				"properties": {
+					"image": {
+						"type": "string",
+						"description": "image file",
+						"format": "binary"
+					},
+					"metadata": {
+						"$ref": "#/components/schemas/RequestMetadata"
+					}
+				}
+			},
+
+			"RequestMetadata": {
+				"type": "object",
+				"properties": {
+					"foo": {
+						"type": "string"
+					}
+				},
+				"description": "image metadata"
+			},
+
+			"SuperheroImageResponse": {
+				"type": "object",
+				"required": ["image"],
+				"properties": {
+					"images": {
+						"type": "string",
+						"description": "The photo of the superhero",
+						"example": "images/625c861a5511ba81c75474ea.png"
+					}
+				}
+			}
+		}
+	}
+}
