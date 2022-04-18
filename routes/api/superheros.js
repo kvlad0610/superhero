@@ -8,6 +8,7 @@ const {
 	update,
 	updateImage,
 } = require('../../controllers/superhero')
+
 const {upload} = require('../../middleware')
 
 const router = express.Router()
